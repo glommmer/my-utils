@@ -1,3 +1,6 @@
+import re
+
+
 def remove_sql_comments(text: str, comment_string: str = "--") -> str:
     result = ""
     in_string = False
@@ -5,6 +8,9 @@ def remove_sql_comments(text: str, comment_string: str = "--") -> str:
     text = text.replace(r"\r", "")
     quotes = ["'", '"']
     this_quote = ""
+    # remove hint or partial comment
+    text = re.sub(r"/\*.+?\*/", "", text)
+    # remove simple comment
     for i in range(len(text)):
         if escape_next and text[i] != "\\":
             result += text[i]
@@ -30,11 +36,14 @@ def remove_sql_comments(text: str, comment_string: str = "--") -> str:
 
 if __name__ == "__main__":
     foo = """
-        SELECT ID -- EMP ID
-             , NM -- EMP NAME
-             , CONCAT('#--', ID) AS KEY -- JOIN KEY
-             , CONCAT('\\'', NM) AS DEC -- SOMETHING
-          FROM EMP_TBL
+        SELECT /*+ SHUFFLE_HASH(A, B) */ 
+               A.ID -- EMP ID
+             , A.NM -- EMP NAME
+             , B.DEPARTMENT /* -- DEPARTMENT*/
+             , CONCAT('#--', A.ID) AS KEY -- JOIN KEY
+             , CONCAT('\\'', A.NM) AS DEC -- SOMETHING
+          FROM EMP_TBL A
+         CROSS JOIN DEPARTMENT B
     """
     for line in foo.splitlines():
         var = remove_sql_comments(line)
