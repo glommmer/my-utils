@@ -4,6 +4,7 @@ from .to_single_line import to_single_line
 from .dummy_func import dummy_func
 from .split_chained_assignment import split_chained_assignment
 from .split_s3_uri import split_s3_uri
+from .get_list_from_athena import get_list_from_athena
 
 
 __all__ = [
@@ -13,4 +14,5 @@ __all__ = [
     "dummy_func",
     "split_chained_assignment",
     "split_s3_uri",
+    "get_list_from_athena",
 ]
