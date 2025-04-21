@@ -1,3 +1,9 @@
+import os
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(os.path.realpath(__file__)).parent))
+
 import re
 from my_utils import get_outer_brackets
 
